@@ -1,0 +1,424 @@
+/* Global Layout & Architectural Background */
+.app-layout {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* The Global Blueprint Layer - Kept minimal */
+.blueprint-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  background-color: var(--bg-secondary);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 128px 128px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 80%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 80%);
+}
+
+/* Generalized Section Architecture */
+.section {
+  padding-top: var(--sp-24);
+  padding-bottom: var(--sp-12);
+  position: relative;
+}
+
+.section-content {
+  padding-left: var(--sp-12);
+  /* Increased offset from axis */
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-top: var(--sp-16);
+    padding-bottom: var(--sp-8);
+  }
+
+  .section-content {
+    padding-left: var(--sp-4);
+  }
+}
+
+/* Component: HERO */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--sp-20);
+}
+
+.hero-title {
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  max-width: 1000px;
+  line-height: 1.05;
+  margin-bottom: var(--sp-6);
+  color: var(--text-primary);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 800px;
+}
+
+.hero-subtitle span.highlight {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* High-End Structural Button CTA -> Binary Switch Effect */
+.btn-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 0 var(--sp-8);
+  height: 56px;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-highlight);
+  cursor: pointer;
+  /* Binary transition: 0ms for background to feel like a terminal */
+  transition: all 0ms;
+}
+
+.btn-premium:hover {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border-color: var(--text-primary);
+}
+
+/* Common Section Heading */
+.section-heading-sm {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--sp-4);
+  display: block;
+}
+
+.section-title {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  margin-bottom: var(--sp-6);
+  max-width: 900px;
+}
+
+/* Component: HIDDEN COST (Structural Ledger) */
+.cost-architecture {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--sp-12);
+  border: 1px solid var(--border-solid);
+  background: var(--bg-secondary);
+}
+
+.ledger-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: var(--sp-4) var(--sp-6);
+  border-bottom: 1px solid var(--border-solid);
+  background: rgba(255, 255, 255, 0.02);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
+
+@media (min-width: 1024px) {
+  .ledger-header {
+    grid-template-columns: 2fr 3fr 1fr;
+    gap: var(--sp-4);
+  }
+}
+
+.ledger-header div {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .ledger-header div {
+    display: block;
+  }
+}
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-2);
+  padding: var(--sp-6);
+  border-bottom: 1px solid var(--border-solid);
+  transition: background-color var(--duration-fast);
+}
+
+.ledger-row:last-child {
+  border-bottom: none;
+}
+
+.ledger-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (min-width: 1024px) {
+  .ledger-row {
+    grid-template-columns: 2fr 3fr 1fr;
+    gap: var(--sp-4);
+    align-items: center;
+  }
+}
+
+.ledger-col-head {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ledger-col-desc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.ledger-col-tag {
+  text-align: left;
+}
+
+@media (min-width: 1024px) {
+  .ledger-col-tag {
+    text-align: right;
+  }
+}
+
+/* Component: THE SHIFT */
+.the-shift-section {
+  text-align: left;
+}
+
+.shift-statement {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  max-width: 900px;
+}
+
+.blueprint-divider {
+  display: flex;
+  align-items: center;
+  margin: var(--sp-10) 0;
+}
+
+.divider-line {
+  height: 1px;
+  background: var(--border-highlight);
+  flex-grow: 1;
+}
+
+.divider-node {
+  width: 4px;
+  height: 4px;
+  background: var(--text-primary);
+}
+
+/* Component: THE ACCORD SYSTEM (Pipeline) */
+.system-pipeline {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: var(--sp-12);
+  /* The global axis is taking over the border line, remove local border */
+}
+
+.stage-block {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-6);
+  padding: var(--sp-6) 0;
+  position: relative;
+}
+
+/* Horizontal connection to axis */
+.stage-connector {
+  position: absolute;
+  left: calc(clamp(24px, 4vw, 64px) - clamp(48px, 8vw, 128px));
+  /* Reverse the padding */
+  top: 40px;
+  width: calc(clamp(48px, 8vw, 128px) - clamp(24px, 4vw, 64px) - 16px);
+  height: 1px;
+  background: var(--border-solid);
+  z-index: 0;
+}
+
+.stage-indicator {
+  position: relative;
+  margin-top: 36px;
+  width: 9px;
+  height: 9px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-highlight);
+  transition: background-color var(--duration-fast);
+  z-index: 1;
+}
+
+.stage-block:hover .stage-connector {
+  background: var(--border-highlight);
+}
+
+.stage-block:hover .stage-indicator {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.stage-details {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: baseline;
+  gap: var(--sp-4);
+  flex: 1;
+}
+
+.stage-details h3 {
+  font-size: 2rem;
+  margin-bottom: var(--sp-2);
+}
+
+.stage-details p {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}
+
+/* Component: TRANSFORMATION (Audit Log) */
+.transformation-matrix {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--sp-12);
+  border: 1px solid var(--border-solid);
+  background: var(--bg-secondary);
+}
+
+.align-top {
+  align-items: start !important;
+}
+
+.matrix-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  font-size: 1.125rem;
+}
+
+.matrix-item.legacy {
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+}
+
+.matrix-item.target {
+  color: var(--text-primary);
+}
+
+.icon-x,
+.icon-check {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-top: 2px;
+  text-decoration: none !important;
+}
+
+.icon-x {
+  color: var(--text-tertiary);
+}
+
+.icon-check {
+  color: var(--accent-green);
+}
+
+/* Component: STRUCTURAL POSTURE (Why Accord / Insights) */
+.structural-block {
+  position: relative;
+  padding: var(--sp-12) var(--sp-10);
+  border: 1px solid var(--border-solid);
+  margin-top: var(--sp-12);
+  background: var(--bg-secondary);
+}
+
+.crop-mark {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-highlight);
+}
+
+.crop-mark.top-left {
+  top: -8px;
+  left: -8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.crop-mark.top-right {
+  top: -8px;
+  right: -8px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.crop-mark.bottom-left {
+  bottom: -8px;
+  left: -8px;
+  border-right: none;
+  border-top: none;
+}
+
+.crop-mark.bottom-right {
+  bottom: -8px;
+  right: -8px;
+  border-left: none;
+  border-top: none;
+}
+
+.structural-heading {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 300;
+  margin-bottom: var(--sp-6);
+  line-height: 1.15;
+}
+
+/* Component: ASSESSMENT CTA (Terminal) */
+.terminal-footer {
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: var(--sp-20);
+  padding-bottom: var(--sp-20);
+}
+
+.terminal-prompt {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  width: 100%;
+}

@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;600;700&display=swap');
+
+:root {
+  /* System Colors - Stark and Professional */
+  --bg-primary: #0F172A;
+  --bg-secondary: #0A0F1A;
+  /* Deeper base for the OS feel */
+  --card-bg: #0F172A;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #475569;
+
+  --accent-blue: #2563EB;
+  --accent-green: #10B981;
+
+  /* Precision Borders - Hairline Structural Lines */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  /* Stronger structural contrast */
+  --border-highlight: rgba(255, 255, 255, 0.2);
+  --border-solid: #1E293B;
+
+  /* Typography */
+  --font-heading: 'Sora', -apple-system, sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Strict Spacing Scale (8px logic) */
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 32px;
+  --sp-5: 40px;
+  --sp-6: 48px;
+  --sp-8: 64px;
+  --sp-10: 80px;
+  --sp-12: 96px;
+  --sp-16: 128px;
+  --sp-20: 160px;
+  --sp-24: 192px;
+  --sp-32: 256px;
+
+  /* Physics */
+  --ease-fast: cubic-bezier(0, 0, 0, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  font-size: 16px;
+}
+
+/* Base Typographic Hierarchy */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  line-height: 1.1;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+}
+
+strong,
+b {
+  font-weight: 600;
+}
+
+/* The Structural Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: clamp(48px, 8vw, 128px);
+  padding-right: clamp(24px, 5vw, 64px);
+  position: relative;
+}
+
+/* The Double-Rule Central Axis */
+.container::before {
+  content: '';
+  position: absolute;
+  left: clamp(24px, 4vw, 64px); /* Moved slightly left of the text content */
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-highlight);
+  border-right: 2px solid var(--bg-secondary); /* creates gap */
+  box-shadow: 3px 0 0 -2px var(--border-subtle); /* creates double line */
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Coordinate System Ticks (attached to axis) */
+.axis-tick {
+  position: absolute;
+  left: calc(clamp(24px, 4vw, 64px) - 6px);
+  width: 13px;
+  height: 1px;
+  background: var(--border-highlight);
+}
+
+/* Base Monospace Tag styling */
+.sys-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
