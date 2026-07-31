@@ -105,6 +105,58 @@
   border-color: var(--text-primary);
 }
 
+/* Terminal style entrance (structural) */
+.hero-revelation {
+  padding-left: var(--sp-8);
+  border-left: 1px solid var(--border-highlight);
+}
+
+.btn-structural {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: var(--text-primary);
+  padding: var(--sp-2) 0;
+  border: none;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  outline: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--duration-fast, 150ms);
+}
+
+.btn-structural:hover {
+  border-bottom: 2px solid var(--text-primary);
+}
+
+.terminal-prompt-char {
+  color: var(--text-tertiary);
+  margin-right: var(--sp-2);
+}
+
+.terminal-text {
+  font-weight: 500;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.1em;
+  background-color: var(--text-primary);
+  margin-left: var(--sp-2);
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* Common Section Heading */
 .section-heading-sm {
   font-family: var(--font-body);
