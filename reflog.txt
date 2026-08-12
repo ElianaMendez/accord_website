@@ -1,0 +1,4 @@
+﻿51aaa76 HEAD@{0}: commit: redesigned hidden sections
+a987ebd HEAD@{1}: commit: redesign
+55c0268 HEAD@{2}: commit: initial corporate website project
+10858be HEAD@{3}: clone: from github.com:ElianaMendez/accord_website.git
