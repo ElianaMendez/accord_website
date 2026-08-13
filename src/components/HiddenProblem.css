@@ -1,0 +1,142 @@
+/* HiddenProblem.css - Sprint 1.5 Phase B.1 */
+.vulnerability-section {
+    padding-top: var(--sp-16);
+    padding-bottom: var(--sp-32);
+}
+
+.dependency-diagram {
+    margin-top: var(--sp-24);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+/* The Critical Node - Massively scaled up */
+.critical-node {
+    border: 1px solid var(--border-highlight);
+    background: rgba(255, 255, 255, 0.02);
+    padding: var(--sp-16) var(--sp-8);
+    text-align: center;
+    z-index: 2;
+    position: relative;
+    width: 100%;
+}
+
+.critical-node-title {
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    font-size: clamp(3rem, 7vw, 6rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.critical-node-tag {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--sp-6);
+    display: inline-block;
+    border: 1px solid var(--border-subtle);
+    padding: var(--sp-2) var(--sp-6);
+    background: var(--bg-primary);
+}
+
+/* Structural Load Lines */
+.load-axis {
+    width: 2px;
+    height: 80px;
+    background: var(--text-primary);
+}
+
+.load-distributor {
+    width: calc(66.666% + 16px);
+    /* Perfect geometric precision for 3-col flex/grid centering */
+    height: 2px;
+    background: var(--text-primary);
+    position: relative;
+}
+
+.load-distributor::before,
+.load-distributor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 80px;
+    background: var(--text-primary);
+}
+
+.load-distributor::before {
+    left: 0;
+}
+
+.load-distributor::after {
+    right: 0;
+}
+
+.load-distributor-center {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 80px;
+    background: var(--text-primary);
+    transform: translateX(-50%);
+}
+
+/* Dependent Nodes */
+.dependent-nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    margin-top: 80px;
+    /* matches load lines */
+    gap: var(--sp-6);
+}
+
+.dependent-node {
+    border-top: 2px solid var(--text-primary);
+    padding: var(--sp-6) var(--sp-4);
+    text-align: center;
+    background: transparent;
+}
+
+.dependent-node-title {
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.dependent-node-desc {
+    margin-top: var(--sp-4);
+    font-size: 1rem;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+}
+
+/* Narrative Side Bracket */
+.problem-narrative {
+    margin-top: var(--sp-32);
+    border-left: 2px solid var(--border-highlight);
+    padding-left: var(--sp-8);
+    max-width: 800px;
+}
+
+.problem-narrative-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--sp-4);
+    font-weight: 300;
+}
+
+.problem-narrative-desc {
+    font-size: 1.25rem;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+}

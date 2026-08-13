@@ -1,0 +1,168 @@
+/* HiddenCost.css - Sprint 1.5D Density */
+.leakage-section {
+    padding-bottom: var(--sp-32);
+}
+
+.leakage-diagram {
+    margin-top: var(--sp-12);
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    /* No generic borders holding it, the structure itself IS the system */
+}
+
+/* LEFT: The 5 Inputs */
+.dimensions-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    flex: 0 0 500px;
+    /* Fixed width for text */
+}
+
+.dim-row {
+    position: relative;
+    background: rgba(255, 255, 255, 0.015);
+    border-left: 2px solid var(--border-subtle);
+    padding: var(--sp-4) var(--sp-6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dim-row::after {
+    /* Horizontal routing bridge to bus */
+    content: '';
+    position: absolute;
+    right: -48px;
+    /* Bus gap */
+    top: 50%;
+    width: 48px;
+    height: 1px;
+    background: var(--border-subtle);
+}
+
+.dim-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-1);
+    font-weight: 300;
+}
+
+.dim-tag {
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--sp-2);
+}
+
+.dim-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* CENTER: The Friction Bus */
+.friction-bus {
+    position: relative;
+    width: 48px;
+    /* Matches the bridge gap */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Create a break from the top and bottom edge visually */
+    margin: var(--sp-4) 0;
+}
+
+/* The actual vertical line */
+.bus-spine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 48px;
+    /* Sits exactly on the right edge of the gap */
+    width: 1px;
+    background: var(--border-highlight);
+}
+
+.bus-label {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    background: var(--bg-secondary);
+    padding: var(--sp-4) 0;
+}
+
+/* The heavy extraction line going right */
+.bus-output-line {
+    position: absolute;
+    left: 48px;
+    /* Originating from spine */
+    top: 50%;
+    width: 48px;
+    height: 2px;
+    background: var(--accent-highlight);
+    z-index: 2;
+}
+
+/* RIGHT: Systemic Leakage Core */
+.leakage-target {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: 48px;
+    /* Buffer from output line */
+}
+
+.leakage-core-node {
+    border: 1px dashed var(--border-highlight);
+    background: rgba(255, 255, 255, 0.01);
+    padding: var(--sp-10) var(--sp-8);
+    position: relative;
+    width: 100%;
+}
+
+.leakage-core-node::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80px;
+    background: var(--accent-highlight);
+}
+
+.leakage-node-tag {
+    font-family: var(--font-mono);
+    color: var(--accent-highlight);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--sp-4);
+    display: inline-block;
+}
+
+.leakage-node-title {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-2);
+}
+
+.leakage-node-desc {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.5;
+    max-width: 400px;
+}
