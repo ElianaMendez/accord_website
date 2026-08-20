@@ -31,7 +31,20 @@ export default function AccordSystem() {
                 <div className="system-intro">
                     <div className="sys-tag" style={{ marginBottom: 'var(--sp-4)' }}>[SYS_PIPE_03 // TRANSFORMATION_PROTOCOL]</div>
                     <h2 className="section-title system-title">The ACCORD System™</h2>
-                    <p className="system-subtitle">One integrated transformation. Five sequential stages to construct permanent capability.</p>
+                    <div className="system-subtitle" style={{ maxWidth: '800px' }}>
+                        <p style={{ margin: '0 0 var(--sp-6) 0' }}>A commercial operating system that turns fragmented sales organizations into structured, scalable commercial capabilities.</p>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
+                            <div style={{ display: 'flex', gap: 'var(--sp-4)', alignItems: 'baseline' }}>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-tertiary)', width: '160px', flexShrink: 0 }}>[TARGET_PROFILE]</span>
+                                <span style={{ fontSize: '1.25rem', color: 'var(--text-secondary)' }}>Built for B2B companies where growth depends on complex, high-value commercial execution.</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: 'var(--sp-4)', alignItems: 'baseline' }}>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-tertiary)', width: '160px', flexShrink: 0 }}>[SYSTEM_PAYLOAD]</span>
+                                <span style={{ fontSize: '1.25rem', color: 'var(--text-secondary)' }}>Installs the infrastructure required to make commercial capability repeatable: operating processes, CRM, intelligence and governance.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="system-architecture-canvas">
@@ -50,7 +63,7 @@ export default function AccordSystem() {
                                         <div className="internal-stage-architecture">
                                             <div className="stage-data-port">
                                                 <span className="port-label">CORE_OBJECTIVE</span>
-                                                <h3 className="arch-node-title">Capital leak diagnosis and capability audit.</h3>
+                                                <h3 className="arch-node-title">Diagnose where capability and capital are leaking.</h3>
                                             </div>
                                             <div className="stage-data-port output-port">
                                                 <span className="port-label">STATE_OUTPUT</span>
@@ -66,7 +79,7 @@ export default function AccordSystem() {
                                         <div className="internal-stage-architecture">
                                             <div className="stage-data-port">
                                                 <span className="port-label">CORE_OBJECTIVE</span>
-                                                <h3 className="arch-node-title">Architectural design of commercial infrastructure.</h3>
+                                                <h3 className="arch-node-title">Design the commercial infrastructure required to close those structural gaps.</h3>
                                             </div>
                                             <div className="stage-data-port output-port">
                                                 <span className="port-label">STATE_OUTPUT</span>
@@ -79,7 +92,7 @@ export default function AccordSystem() {
                                 <div className="internal-stage-architecture-row">
                                     <div className="stage-data-port">
                                         <span className="port-label">CORE_OBJECTIVE</span>
-                                        <h3 className="arch-node-title">Technical implementation of operations and CRM.</h3>
+                                        <h3 className="arch-node-title">Install the operating infrastructure, including processes, CRM and operational execution.</h3>
                                     </div>
                                     <div className="stage-data-port output-port">
                                         <span className="port-label">STATE_OUTPUT</span>
@@ -91,7 +104,7 @@ export default function AccordSystem() {
                             <div className="internal-stage-architecture-row" style={{ marginTop: 'var(--sp-8)' }}>
                                 <div className="stage-data-port">
                                     <span className="port-label">CORE_OBJECTIVE</span>
-                                    <h3 className="arch-node-title">Deployment of transversal AI agents.</h3>
+                                    <h3 className="arch-node-title">Introduce intelligence and AI capabilities across the system.</h3>
                                 </div>
                                 <div className="stage-data-port output-port">
                                     <span className="port-label">STATE_OUTPUT</span>
@@ -103,7 +116,7 @@ export default function AccordSystem() {
                         <div className="internal-stage-architecture-row" style={{ marginTop: 'var(--sp-8)' }}>
                             <div className="stage-data-port">
                                 <span className="port-label">CORE_OBJECTIVE</span>
-                                <h3 className="arch-node-title" style={{ maxWidth: '600px' }}>Continuous governance and margin optimization (CGO).</h3>
+                                <h3 className="arch-node-title" style={{ maxWidth: '600px' }}>Govern, optimize and evolve the installed capability.</h3>
                             </div>
                             <div className="stage-data-port output-port" style={{ borderLeftColor: 'var(--accent-highlight)' }}>
                                 <span className="port-label">STATE_OUTPUT</span>

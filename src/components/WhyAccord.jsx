@@ -19,6 +19,9 @@ export default function WhyAccord() {
                         <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', maxWidth: '600px' }}>
                             A rigorous engineering approach to commercial scaling, replacing strategic vulnerability and tactical hacks with absolute architectural coherence.
                         </p>
+                        <p style={{ fontSize: '1.25rem', color: 'var(--text-primary)', maxWidth: '600px', margin: 'var(--sp-4) 0 0 0', fontWeight: 500 }}>
+                            The capability stays inside the organization—not in the people who built it.
+                        </p>
                     </div>
                 </div>
             </div>
