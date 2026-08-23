@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function AssessmentCTA() {
     return (
         <section className="section terminal-footer">
@@ -15,7 +17,7 @@ export default function AssessmentCTA() {
                         <div style={{ flex: 1, borderBottom: '1px solid var(--border-highlight)', position: 'relative' }}>
                             <span style={{ position: 'absolute', bottom: '8px', left: 0, fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)' }}>Awaiting execution command...</span>
                         </div>
-                        <button className="btn-premium">Execute Audit</button>
+                        <Link to="/diagnostic" className="btn-premium">Execute Audit</Link>
                     </div>
                 </div>
             </div>
