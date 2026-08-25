@@ -26,6 +26,7 @@ export default function Diagnostic() {
     const [step, setStep] = useState('intro');
     const [sessionId, setSessionId] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isStarting, setIsStarting] = useState(false);
 
     useEffect(() => {
         // Authenticate/Recover flow: Restore auth -> Match Session -> Resume
@@ -47,9 +48,15 @@ export default function Diagnostic() {
     }, []);
 
     const handleStart = async () => {
-        const session = await initializeDiagnostic();
-        setSessionId(session.diagnosticId);
-        setStep('company_context');
+        if (isStarting) return;
+        setIsStarting(true);
+        try {
+            const session = await initializeDiagnostic();
+            setSessionId(session.diagnosticId);
+            setStep('company_context');
+        } finally {
+            setIsStarting(false);
+        }
     };
 
     const handleCompanyComplete = async (data) => {
@@ -109,7 +116,7 @@ export default function Diagnostic() {
                     </div>
                 ) : (
                     <>
-                        {step === 'intro' && <DiagnosticIntro onStart={handleStart} />}
+                        {step === 'intro' && <DiagnosticIntro onStart={handleStart} isStarting={isStarting} />}
                         {step === 'company_context' && <CompanyContext onComplete={handleCompanyComplete} defaultValues={getLocalSession()?.companyContext} />}
                         {step === 'commercial_context' && <CommercialContext onComplete={handleCommercialComplete} defaultValues={getLocalSession()?.commercialContext} />}
                         {step === 'executive_context' && <ExecutiveContext onComplete={handleExecutiveComplete} defaultValues={getLocalSession()?.executiveContext} />}

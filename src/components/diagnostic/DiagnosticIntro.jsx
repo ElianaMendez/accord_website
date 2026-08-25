@@ -1,7 +1,7 @@
 import React from 'react';
 import './DiagnosticIntro.css';
 
-export default function DiagnosticIntro({ onStart }) {
+export default function DiagnosticIntro({ onStart, isStarting }) {
     return (
         <div className="diagnostic-intro">
             <div className="sys-tag intro-tag">[PROCESS_INITIATED]</div>
@@ -34,8 +34,8 @@ export default function DiagnosticIntro({ onStart }) {
                 </div>
             </div>
 
-            <button className="btn-premium btn-start" onClick={onStart}>
-                Begin Diagnostic
+            <button className="btn-premium btn-start" onClick={onStart} disabled={isStarting}>
+                {isStarting ? 'Initializing...' : 'Begin Diagnostic'}
             </button>
         </div>
     );
