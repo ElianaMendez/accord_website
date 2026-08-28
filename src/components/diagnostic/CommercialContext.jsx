@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './ContextStyles.css';
 
 export default function CommercialContext({ onComplete, defaultValues = {} }) {
+    const [, setSearchParams] = useSearchParams();
     const [data, setData] = useState({
         annual_revenue_range: defaultValues.annual_revenue_range || '',
         revenue_growth_pattern: defaultValues.revenue_growth_pattern || '',
@@ -64,6 +66,9 @@ export default function CommercialContext({ onComplete, defaultValues = {} }) {
             </div>
 
             <div className="step-footer">
+                <button className="btn-secondary" onClick={() => setSearchParams({ step: 'company_context' })}>
+                    [ Previous ]
+                </button>
                 <button
                     className={`btn-next`}
                     onClick={() => onComplete(data)}

@@ -129,25 +129,3 @@
 .q-footer {
     justify-content: space-between;
 }
-
-.btn-secondary {
-    background: transparent;
-    border: 1px solid var(--border-solid);
-    color: var(--text-secondary);
-    padding: 12px 32px;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: all 0.2s var(--ease-fast);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    border-color: var(--border-highlight);
-    color: var(--text-primary);
-}
-
-.btn-secondary:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}

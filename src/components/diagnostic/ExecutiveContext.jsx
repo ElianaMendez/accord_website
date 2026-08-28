@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './ContextStyles.css';
 
 export default function ExecutiveContext({ onComplete, defaultValues = {} }) {
+    const [, setSearchParams] = useSearchParams();
     const [data, setData] = useState({
         first_name: defaultValues.first_name || '',
         last_name: defaultValues.last_name || '',
@@ -40,6 +42,9 @@ export default function ExecutiveContext({ onComplete, defaultValues = {} }) {
             </div>
 
             <div className="step-footer">
+                <button className="btn-secondary" onClick={() => setSearchParams({ step: 'commercial_context' })}>
+                    [ Previous ]
+                </button>
                 <button
                     className={`btn-next ${!isComplete ? 'disabled' : ''}`}
                     onClick={() => isComplete && onComplete(data)}

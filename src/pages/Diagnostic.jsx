@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DiagnosticIntro from '../components/diagnostic/DiagnosticIntro';
 import CompanyContext from '../components/diagnostic/CompanyContext';
 import CommercialContext from '../components/diagnostic/CommercialContext';
@@ -23,60 +23,143 @@ import '../App.css';
 
 export default function Diagnostic() {
     const navigate = useNavigate();
-    const [step, setStep] = useState('intro');
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // UI state
+    const urlStep = searchParams.get('step') || 'intro';
+
     const [sessionId, setSessionId] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isStarting, setIsStarting] = useState(false);
+    const [existingSession, setExistingSession] = useState(null);
+    const [isRecovering, setIsRecovering] = useState(true);
+
+    const ranks = {
+        'intro': 0, 'company': 1, 'commercial': 2, 'executive': 3, 'strategic': 4
+    };
+    const getRank = (val) => {
+        if (!val) return 0;
+        if (ranks[val] !== undefined) return ranks[val];
+        if (val.startsWith('q')) return 4 + parseInt(val.substring(1));
+        return -1;
+    };
+
+    const getUrlRank = () => {
+        if (urlStep === 'intro') return ranks['intro'];
+        if (urlStep === 'company_context') return ranks['company'];
+        if (urlStep === 'commercial_context') return ranks['commercial'];
+        if (urlStep === 'executive_context') return ranks['executive'];
+        if (urlStep === 'strategic_context') return ranks['strategic'];
+        if (urlStep === 'questionnaire') {
+            const n = searchParams.get('n');
+            if (n) return 4 + parseInt(n);
+            return 5;
+        }
+        return 0; // Default
+    };
 
     useEffect(() => {
-        // Authenticate/Recover flow: Restore auth -> Match Session -> Resume
         const init = async () => {
-            const existing = getLocalSession();
-            if (existing && existing.status === 'in_progress') {
-                const verifiedSession = await recoverRemoteSession(existing);
-                if (verifiedSession) {
-                    setSessionId(verifiedSession.diagnosticId);
-                    if (!verifiedSession.companyContext?.company_name) setStep('company_context');
-                    else if (!verifiedSession.commercialContext?.annual_revenue_range) setStep('commercial_context');
-                    else if (!verifiedSession.executiveContext?.email) setStep('executive_context');
-                    else if (!verifiedSession.strategicContext?.primary_barrier) setStep('strategic_context');
-                    else setStep('questionnaire');
+            setIsRecovering(true);
+            const local = getLocalSession();
+            let activeSession = null;
+
+            if (local) {
+                if (local.status === 'in_progress') {
+                    activeSession = await recoverRemoteSession(local);
+                } else if (local.status === 'started') {
+                    activeSession = local;
+                }
+            } else {
+                // If local storage is wiped, attempting to recover with null
+                activeSession = await recoverRemoteSession(null);
+            }
+
+            // Completed session protection
+            if (local?.status === 'completed' || activeSession?.status === 'completed') {
+                navigate('/diagnostic/results');
+                return;
+            }
+
+            if (activeSession) {
+                setSessionId(activeSession.diagnosticId);
+                setExistingSession(activeSession);
+
+                // Route Protection: Prevent skipping ahead
+                const userProgressRank = getRank(activeSession.last_completed_step);
+                const AttemptedRank = getUrlRank();
+
+                // Allow them to be at exactly the next logica step (completed + 1)
+                // If they attempt to skip higher than completed + 1, revert to their valid next step
+                if (AttemptedRank > userProgressRank + 1) {
+                    navigate('/diagnostic', { replace: true });
+                }
+            } else {
+                // No active session: prevent deep URL access
+                if (urlStep !== 'intro') {
+                    navigate('/diagnostic', { replace: true });
                 }
             }
+            setIsRecovering(false);
         };
         init();
-    }, []);
+    }, [urlStep, searchParams, navigate]);
 
-    const handleStart = async () => {
+    const handleStartNew = async () => {
         if (isStarting) return;
         setIsStarting(true);
         try {
             const session = await initializeDiagnostic();
             setSessionId(session.diagnosticId);
-            setStep('company_context');
+            setExistingSession(session);
+            setSearchParams({ step: 'company_context' });
         } finally {
             setIsStarting(false);
         }
     };
 
+    const handleResume = () => {
+        if (existingSession) {
+            const last = existingSession.last_completed_step;
+            let nextStep = 'company_context';
+            let n = null;
+
+            if (last === 'company') nextStep = 'commercial_context';
+            else if (last === 'commercial') nextStep = 'executive_context';
+            else if (last === 'executive') nextStep = 'strategic_context';
+            else if (last === 'strategic') { nextStep = 'questionnaire'; n = '1'; }
+            else if (last && last.startsWith('q')) {
+                const qNum = parseInt(last.substring(1));
+                nextStep = 'questionnaire';
+                n = (qNum + 1).toString();
+            }
+
+            if (n) {
+                setSearchParams({ step: nextStep, n });
+            } else {
+                setSearchParams({ step: nextStep });
+            }
+        }
+    };
+
     const handleCompanyComplete = async (data) => {
         await updateDiagnosticState(sessionId, 'companyContext', data);
-        setStep('commercial_context');
+        setSearchParams({ step: 'commercial_context' });
     };
 
     const handleCommercialComplete = async (data) => {
         await updateDiagnosticState(sessionId, 'commercialContext', data);
-        setStep('executive_context');
+        setSearchParams({ step: 'executive_context' });
     };
 
     const handleExecutiveComplete = async (data) => {
         await updateDiagnosticState(sessionId, 'executiveContext', data);
-        setStep('strategic_context');
+        setSearchParams({ step: 'strategic_context' });
     };
 
     const handleStrategicComplete = async (data) => {
         await updateDiagnosticState(sessionId, 'strategicContext', data);
-        setStep('questionnaire');
+        setSearchParams({ step: 'questionnaire', n: '1' });
     };
 
     const handleQuestionnaireComplete = async (responses) => {
@@ -107,21 +190,23 @@ export default function Diagnostic() {
 
             <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--sp-8)' }}>
 
-                {isProcessing ? (
+                {isProcessing || isRecovering ? (
                     <div className="processing-state" style={{ textAlign: 'center' }}>
-                        <div className="sys-tag" style={{ marginBottom: 'var(--sp-4)' }}>[ANALYSIS_IN_PROGRESS]</div>
+                        <div className="sys-tag" style={{ marginBottom: 'var(--sp-4)' }}>
+                            {isProcessing ? '[ANALYSIS_IN_PROGRESS]' : '[INITIALIZING_DIAGNOSTIC...]'}
+                        </div>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', color: 'var(--text-primary)' }}>
-                            Calculating systemic constraints...
+                            {isProcessing ? 'Calculating systemic constraints...' : 'Synchronizing architectural state...'}
                         </div>
                     </div>
                 ) : (
                     <>
-                        {step === 'intro' && <DiagnosticIntro onStart={handleStart} isStarting={isStarting} />}
-                        {step === 'company_context' && <CompanyContext onComplete={handleCompanyComplete} defaultValues={getLocalSession()?.companyContext} />}
-                        {step === 'commercial_context' && <CommercialContext onComplete={handleCommercialComplete} defaultValues={getLocalSession()?.commercialContext} />}
-                        {step === 'executive_context' && <ExecutiveContext onComplete={handleExecutiveComplete} defaultValues={getLocalSession()?.executiveContext} />}
-                        {step === 'strategic_context' && <StrategicContext onComplete={handleStrategicComplete} defaultValues={getLocalSession()?.strategicContext} />}
-                        {step === 'questionnaire' && <Questionnaire onComplete={handleQuestionnaireComplete} />}
+                        {urlStep === 'intro' && <DiagnosticIntro onStartNew={handleStartNew} onResume={handleResume} isStarting={isStarting} existingSession={existingSession} />}
+                        {urlStep === 'company_context' && <CompanyContext onComplete={handleCompanyComplete} defaultValues={existingSession?.companyContext || {}} />}
+                        {urlStep === 'commercial_context' && <CommercialContext onComplete={handleCommercialComplete} defaultValues={existingSession?.commercialContext || {}} />}
+                        {urlStep === 'executive_context' && <ExecutiveContext onComplete={handleExecutiveComplete} defaultValues={existingSession?.executiveContext || {}} />}
+                        {urlStep === 'strategic_context' && <StrategicContext onComplete={handleStrategicComplete} defaultValues={existingSession?.strategicContext || {}} />}
+                        {urlStep === 'questionnaire' && <Questionnaire onComplete={handleQuestionnaireComplete} sessionId={sessionId} />}
                     </>
                 )}
             </main>

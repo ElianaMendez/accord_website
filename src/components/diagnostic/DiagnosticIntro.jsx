@@ -1,7 +1,7 @@
 import React from 'react';
 import './DiagnosticIntro.css';
 
-export default function DiagnosticIntro({ onStart, isStarting }) {
+export default function DiagnosticIntro({ onStartNew, onResume, isStarting, existingSession }) {
     return (
         <div className="diagnostic-intro">
             <div className="sys-tag intro-tag">[PROCESS_INITIATED]</div>
@@ -34,9 +34,23 @@ export default function DiagnosticIntro({ onStart, isStarting }) {
                 </div>
             </div>
 
-            <button className="btn-premium btn-start" onClick={onStart} disabled={isStarting}>
-                {isStarting ? 'Initializing...' : 'Begin Diagnostic'}
-            </button>
+            {existingSession ? (
+                <div className="resume-prompt" style={{ marginTop: 'var(--sp-8)', display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+                    <p style={{ color: 'var(--text-secondary)' }}>You have an incomplete diagnostic session.</p>
+                    <div className="step-footer" style={{ marginTop: 0, paddingBottom: 'var(--sp-4)', borderTop: 'none' }}>
+                        <button className="btn-secondary" onClick={onResume} disabled={isStarting}>
+                            [ Resume Session ]
+                        </button>
+                        <button className="btn-next" onClick={onStartNew} disabled={isStarting}>
+                            {isStarting ? 'Initializing...' : 'Start New Session'}
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <button className="btn-premium btn-start" onClick={onStartNew} disabled={isStarting}>
+                    {isStarting ? 'Initializing...' : 'Begin Diagnostic'}
+                </button>
+            )}
         </div>
     );
 }

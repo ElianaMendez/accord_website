@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { QUESTIONS, DIMENSIONS } from '../../logic/diagnosticQuestions';
+import { getLocalSession, updateDiagnosticState } from '../../logic/diagnosticStorage';
 import './ContextStyles.css'; // Reusing layout styles where applicable
 import './Questionnaire.css';
 
-export default function Questionnaire({ onComplete }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [responses, setResponses] = useState([]);
+export default function Questionnaire({ onComplete, sessionId }) {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const currN = parseInt(searchParams.get('n')) || 1;
+    const currentIndex = currN - 1;
+
+    const [responses, setResponses] = useState(() => {
+        const session = getLocalSession();
+        return (session && session.localResponses) ? session.localResponses : [];
+    });
     const [selectedScore, setSelectedScore] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const currentQuestion = QUESTIONS[currentIndex];
     const dimensionInfo = DIMENSIONS[currentQuestion.dimension];
@@ -15,33 +24,47 @@ export default function Questionnaire({ onComplete }) {
         setSelectedScore(score);
     };
 
-    const handleNext = () => {
-        if (selectedScore === null) return;
+    useEffect(() => {
+        const alreadyAnswered = responses.find(r => r.questionId === currentQuestion.id);
+        setSelectedScore(alreadyAnswered ? alreadyAnswered.score : null);
+    }, [currN, currentQuestion.id, responses]);
 
-        // Save response
-        const newResponse = {
-            questionId: currentQuestion.id,
-            score: selectedScore
-        };
+    const handleNext = async () => {
+        if (selectedScore === null || isSubmitting) return;
+        setIsSubmitting(true);
 
-        const updatedResponses = [...responses.filter(r => r.questionId !== currentQuestion.id), newResponse];
-        setResponses(updatedResponses);
+        try {
+            const newResponse = {
+                questionId: currentQuestion.id,
+                score: selectedScore
+            };
 
-        if (currentIndex < QUESTIONS.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-            setSelectedScore(null);
-        } else {
-            // Completed, pass to parent
-            onComplete(updatedResponses);
+            // STRICT NETWORK-FIRST SEQUENCING
+            await updateDiagnosticState(sessionId, 'singleResponse', newResponse);
+            await updateDiagnosticState(sessionId, 'frontendProgress', 'q' + currN);
+
+            const updatedResponses = [...responses.filter(r => r.questionId !== currentQuestion.id), newResponse];
+            setResponses(updatedResponses);
+            await updateDiagnosticState(sessionId, 'localResponses', updatedResponses);
+
+            if (currentIndex < QUESTIONS.length - 1) {
+                setSearchParams({ step: 'questionnaire', n: (currN + 1).toString() });
+            } else {
+                onComplete(updatedResponses);
+            }
+        } catch (error) {
+            console.error("Failed to commit response securely. Aborting navigation.", error);
+            // UI remains on current question
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handlePrev = () => {
         if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-            // Pre-select if already answered
-            const prevRes = responses.find(r => r.questionId === QUESTIONS[currentIndex - 1].id);
-            setSelectedScore(prevRes ? prevRes.score : null);
+            setSearchParams({ step: 'questionnaire', n: (currN - 1).toString() });
+        } else {
+            setSearchParams({ step: 'strategic_context' });
         }
     };
 
@@ -99,15 +122,15 @@ export default function Questionnaire({ onComplete }) {
             </div>
 
             <div className="step-footer q-footer">
-                <button className="btn-secondary" onClick={handlePrev} disabled={currentIndex === 0}>
+                <button className="btn-secondary" onClick={handlePrev} disabled={isSubmitting}>
                     [ Previous ]
                 </button>
                 <button
-                    className={`btn-next ${selectedScore === null ? 'disabled' : ''}`}
+                    className={`btn-next ${selectedScore === null || isSubmitting ? 'disabled' : ''}`}
                     onClick={handleNext}
-                    disabled={selectedScore === null}
+                    disabled={selectedScore === null || isSubmitting}
                 >
-                    {currentIndex === QUESTIONS.length - 1 ? 'Execute Analysis' : 'Next Question'}
+                    {isSubmitting ? 'Saving...' : (currentIndex === QUESTIONS.length - 1 ? 'Execute Analysis' : 'Next Question')}
                 </button>
             </div>
         </div>

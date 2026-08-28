@@ -116,6 +116,7 @@
     margin-top: var(--sp-12);
     display: flex;
     justify-content: flex-end;
+    gap: var(--sp-4);
     border-top: 1px solid var(--border-solid);
     padding-top: var(--sp-6);
 }
@@ -130,9 +131,32 @@
     letter-spacing: 0.1em;
     border: none;
     cursor: pointer;
+    margin-left: auto;
 }
 
 .btn-next.disabled {
     opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border-solid);
+    color: var(--text-secondary);
+    padding: 12px 32px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-fast);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    border-color: var(--border-highlight);
+    color: var(--text-primary);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.3;
     cursor: not-allowed;
 }
