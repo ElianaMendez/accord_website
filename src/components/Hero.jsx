@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import './Hero.css';
 
 export default function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="section hero-section">
       <div className="container">
@@ -31,7 +34,9 @@ export default function Hero() {
               <div className="hero-cmd-indicator"></div>
               [AWAITING_INPUT // RUN_CMD]
             </div>
-            <button className="btn-command">Initiate System</button>
+            <button className="btn-command" onClick={() => navigate('/diagnostic')}>
+              Start Executive Diagnostic
+            </button>
           </div>
         </div>
       </div>

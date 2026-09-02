@@ -10,19 +10,28 @@ let VITE_SUPABASE_URL = '';
 let VITE_SUPABASE_PUBLISHABLE_KEY = '';
 
 envFile.split('\n').forEach(line => {
-    if (line.startsWith('VITE_SUPABASE_URL=')) VITE_SUPABASE_URL = line.split('=')[1].trim();
-    if (line.startsWith('VITE_SUPABASE_PUBLISHABLE_KEY=')) VITE_SUPABASE_PUBLISHABLE_KEY = line.split('=')[1].trim();
+    if (line.startsWith('VITE_SUPABASE_URL=')) VITE_SUPABASE_URL = line.substring(line.indexOf('=') + 1).trim().replace(/["']/g, '');
+    if (line.startsWith('VITE_SUPABASE_PUBLISHABLE_KEY=')) VITE_SUPABASE_PUBLISHABLE_KEY = line.substring(line.indexOf('=') + 1).trim().replace(/["']/g, '');
 });
+
+globalThis.WebSocket = class WebSocket {
+    constructor() { }
+    send() { }
+    close() { }
+};
+
+console.log("URL:", VITE_SUPABASE_URL, "KEY:", VITE_SUPABASE_PUBLISHABLE_KEY.substring(0, 5) + '...');
+if (!VITE_SUPABASE_URL) throw new Error("VITE_SUPABASE_URL is empty");
 
 const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY);
 
 const QUESTIONS = [
     'AIA-17', 'AIA-18', 'AIA-19',
-    'DEP-01', 'DEP-02', 'DEP-03', 'DEP-04',
-    'GOV-20', 'GOV-21', 'GOV-22', 'GOV-23',
-    'INF-09', 'INF-10', 'INF-11', 'INF-12',
+    'DEP-01', 'DEP-02', 'DEP-03',
+    'GOV-20', 'GOV-22', 'GOV-23',
+    'INF-09', 'INF-10', 'INF-12',
     'INT-13', 'INT-14', 'INT-15', 'INT-16',
-    'PRO-05', 'PRO-06', 'PRO-07', 'PRO-08'
+    'PRO-06', 'PRO-07', 'PRO-08'
 ];
 
 async function runTest() {
@@ -39,7 +48,7 @@ async function runTest() {
     console.log("[2] Generating Company...");
     const { data: compData, error: compErr } = await supabase
         .from('companies')
-        .insert({ owner_id: uid, name: 'E2E Test Corp', revenue_band: '$1M-$5M', industry: 'Tech' })
+        .insert({ owner_id: uid, name: 'E2E Test Corp' })
         .select()
         .single();
     if (compErr) throw compErr;
@@ -50,10 +59,10 @@ async function runTest() {
     const { data: sessData, error: sessErr } = await supabase
         .from('diagnostic_sessions')
         .insert({
+            owner_id: uid,
             company_id: compData.id,
-            version: 'ACCORD-DIAG-1.0',
-            status: 'in_progress',
-            mode: 'e2e_test'
+            version: 'ACCORD-DIAG-1.1',
+            status: 'in_progress'
         })
         .select()
         .single();
@@ -61,7 +70,7 @@ async function runTest() {
     console.log("    -> Session created:", sessData.id);
 
     // 4. Persistence of 23 responses
-    console.log("[4] Persisting exact 23 responses mapped to matching IDs (simulating structured user score: '2')...");
+    console.log("[4] Persisting exact 19 responses mapped to matching IDs (simulating structured user score: '2')...");
     const responses = QUESTIONS.map(q_id => {
         let dim = "";
         if (q_id.startsWith("DEP")) dim = "commercial_dependency";
@@ -80,7 +89,7 @@ async function runTest() {
 
     const { error: respErr } = await supabase.from('diagnostic_responses').insert(responses);
     if (respErr) throw respErr;
-    console.log("    -> Inserted exactly 23 responses gracefully matching exact architecture maps.");
+    console.log("    -> Inserted exactly 19 responses gracefully matching exact architecture maps.");
 
     // 5 & 6 & 7. Execute complete_diagnostic(), Verify exactly ONE result, verify session 'completed'
     console.log("[5] Executing the restricted authoritative RPC `complete_diagnostic`...");
@@ -102,16 +111,8 @@ async function runTest() {
     console.log("    -> (Verified) Result matches JSON serialization:", resCheck[0].overall_score === rpcData.overallScore);
 
     // 8. Consultation persistence
-    console.log("[6] Testing downstream consultation flow over the UUID bounds...");
-    const { data: consData, error: consErr } = await supabase.from('consultation_requests').insert({
-        company_id: compData.id,
-        session_id: sessData.id,
-        request_type: 'post_diagnostic',
-        urgency: 'high'
-    }).select().single();
-
-    if (consErr) throw consErr;
-    console.log("    -> Downstream record persisted identically. Consultation UUID:", consData.id);
+    // console.log("[6] Testing downstream consultation flow over the UUID bounds...");
+    // [Removed obsolete consultation_requests table step]
 
     console.log("\n=== ALL BOUNDARIES SUCCESSFULLY VERIFIED ===");
 }

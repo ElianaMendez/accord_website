@@ -60,7 +60,10 @@ export default function Diagnostic() {
 
     useEffect(() => {
         const init = async () => {
-            setIsRecovering(true);
+            // Only show recovering screen if we don't have a session ID yet
+            if (!sessionId) {
+                setIsRecovering(true);
+            }
             const local = getLocalSession();
             let activeSession = null;
 
@@ -180,7 +183,7 @@ export default function Diagnostic() {
         } catch (error) {
             console.error("Diagnostic Finalization failed.", error);
             setIsProcessing(false);
-            alert("Failed to finalize diagnostic result securely. Please ensure all 23 questions are answered or refresh the page.");
+            alert("Failed to finalize diagnostic result securely. Please ensure all 19 questions are answered or refresh the page.");
         }
     };
 
@@ -188,7 +191,7 @@ export default function Diagnostic() {
         <div className="app-layout">
             <div className="blueprint-layer"></div>
 
-            <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--sp-8)' }}>
+            <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 'var(--sp-8)', paddingTop: 'var(--sp-4)' }}>
 
                 {isProcessing || isRecovering ? (
                     <div className="processing-state" style={{ textAlign: 'center' }}>

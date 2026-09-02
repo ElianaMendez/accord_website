@@ -74,7 +74,7 @@ export async function recoverRemoteSession(session) {
                 completedAt: data.completed_at,
             };
 
-            // Enhanced Recovery for Q1-Q23
+            // Enhanced Recovery for Q1-Q19
             let highestQ = 0;
             const resData = await supabase
                 .from('diagnostic_responses')
@@ -102,7 +102,7 @@ export async function recoverRemoteSession(session) {
             }
 
             if (data.status === 'completed') {
-                recoveredSession.last_completed_step = 'q23';
+                recoveredSession.last_completed_step = 'q19';
             } else if (highestQ > 0) {
                 recoveredSession.last_completed_step = 'q' + highestQ;
             } else if (data.strategic_primary_barrier !== null) {
@@ -327,7 +327,7 @@ export async function updateDiagnosticState(sessionId, key, value) {
         if (key === 'commercialContext') return 'commercial';
         if (key === 'executiveContext') return 'executive';
         if (key === 'strategicContext') return 'strategic';
-        if (key === 'responses') return 'q23';
+        if (key === 'responses') return 'q19';
         return null;
     };
 

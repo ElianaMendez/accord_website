@@ -19,6 +19,7 @@ export default function Questionnaire({ onComplete, sessionId }) {
 
     const currentQuestion = QUESTIONS[currentIndex];
     const dimensionInfo = DIMENSIONS[currentQuestion.dimension];
+    const capIndex = Object.keys(DIMENSIONS).indexOf(currentQuestion.dimension) + 1;
 
     const handleSelect = (score) => {
         setSelectedScore(score);
@@ -92,46 +93,62 @@ export default function Questionnaire({ onComplete, sessionId }) {
                 <div className="q-progress-fill" style={{ width: `${progressPct}%` }}></div>
             </div>
 
-            <div className="step-header">
-                <div className="q-meta">
-                    <span className="step-tag">02 // CAPABILITY ANALYSIS</span>
-                    <span className="q-counter">Q{currentIndex + 1} / {QUESTIONS.length}</span>
-                </div>
-
-                <div className="dimension-badge">
-                    <span className="dim-tag">{currentQuestion.id.split('-')[0]}</span>
-                    <span className="dim-name">{dimensionInfo.name}</span>
-                </div>
-            </div>
-
-            <div className="q-body">
-                <h2 className="q-text">{currentQuestion.question}</h2>
-
-                <div className="answers-grid">
-                    {currentQuestion.answers.map((ans, idx) => (
-                        <div
-                            key={ans.id}
-                            className={`answer-card ${selectedScore === ans.score ? 'selected' : ''}`}
-                            onClick={() => handleSelect(ans.score)}
-                        >
-                            <div className="answer-key">{idx + 1}</div>
-                            <div className="answer-text">{ans.text}</div>
+            <div className="diagnostic-grid-container">
+                {/* LEFT ZONE: METHODOLOGY */}
+                <div className="methodology-zone">
+                    <div className="capability-section">
+                        <div className="capability-anchor">
+                            0{capIndex}
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div className="capability-content">
+                            <div className="q-meta">
+                                <span className="step-tag">CAPABILITY 0{capIndex} / 06</span>
+                            </div>
+                            <h2 className="capability-name">
+                                {dimensionInfo.name}
+                            </h2>
+                        </div>
+                    </div>
 
-            <div className="step-footer q-footer">
-                <button className="btn-secondary" onClick={handlePrev} disabled={isSubmitting}>
-                    [ Previous ]
-                </button>
-                <button
-                    className={`btn-next ${selectedScore === null || isSubmitting ? 'disabled' : ''}`}
-                    onClick={handleNext}
-                    disabled={selectedScore === null || isSubmitting}
-                >
-                    {isSubmitting ? 'Saving...' : (currentIndex === QUESTIONS.length - 1 ? 'Execute Analysis' : 'Next Question')}
-                </button>
+                    <div className="capability-statement">
+                        {dimensionInfo.statement}
+                    </div>
+                </div>
+
+                {/* RIGHT ZONE: EVALUATION */}
+                <div className="evaluation-zone">
+                    <div className="q-meta diagnostic-signal">
+                        <span className="step-tag" style={{ color: 'var(--text-tertiary)' }}>DIAGNOSTIC SIGNAL</span>
+                    </div>
+                    <div className="q-body">
+                        <h2 className="q-text">{currentQuestion.question}</h2>
+                        <div className="answers-grid">
+                            {currentQuestion.answers.map((ans, idx) => (
+                                <div
+                                    key={ans.id}
+                                    className={`answer-card ${selectedScore === ans.score ? 'selected' : ''}`}
+                                    onClick={() => handleSelect(ans.score)}
+                                >
+                                    <div className="answer-key">{idx + 1}</div>
+                                    <div className="answer-text">{ans.text}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="step-footer q-footer">
+                        <button className="q-btn-prev" onClick={handlePrev} disabled={isSubmitting}>
+                            [ ANTERIOR ]
+                        </button>
+                        <button
+                            className={`q-btn-next ${selectedScore === null || isSubmitting ? 'disabled' : ''}`}
+                            onClick={handleNext}
+                            disabled={selectedScore === null || isSubmitting}
+                        >
+                            {currentIndex === QUESTIONS.length - 1 ? 'EJECUTAR ANÁLISIS →' : 'SIGUIENTE →'}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
